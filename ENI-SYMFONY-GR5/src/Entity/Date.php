@@ -52,6 +52,18 @@ class Date
      */
     private $etat;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="utilisateurdateorga")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $utilisateur;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="campusdate")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +149,30 @@ class Date
     public function setEtat(bool $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
 
         return $this;
     }
