@@ -73,7 +73,7 @@ class Utilisateur implements UserInterface
     private $participantdate;
 
     /**
-     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="utilisateur", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="utilisateur")
      */
     private $participantdateorga;
 

@@ -25,7 +25,7 @@ class Etat
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="etatDate", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="etatDate")
      */
 
     private $dates;

@@ -25,12 +25,12 @@ class Campus
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity=Utilisateur::class, mappedBy="relation", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Utilisateur::class, mappedBy="relation")
      */
     private $utilisateurs;
 
     /**
-     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="campus", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="campus")
      */
     private $campusdate;
 
