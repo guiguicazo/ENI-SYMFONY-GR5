@@ -64,6 +64,18 @@ class Date
      */
     private $campus;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="dates")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $etatDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="dates")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $DateLieux;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -149,6 +161,30 @@ class Date
     public function setEtat(bool $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getEtatDate(): ?Etat
+    {
+        return $this->etatDate;
+    }
+
+    public function setEtatDate(?Etat $etatDate): self
+    {
+        $this->etatDate = $etatDate;
+
+        return $this;
+    }
+
+    public function getDateLieux(): ?Lieu
+    {
+        return $this->DateLieux;
+    }
+
+    public function setDateLieux(?Lieu $DateLieux): self
+    {
+        $this->DateLieux = $DateLieux;
 
         return $this;
     }
