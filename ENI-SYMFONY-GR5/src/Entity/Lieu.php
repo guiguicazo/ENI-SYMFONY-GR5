@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LieuRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,22 @@ class Lieu
      * @ORM\Column(type="float")
      */
     private $longitude;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="lieus")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $LieuVille;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="DateLieux")
+     */
+    private $dates;
+
+    public function __construct()
+    {
+        $this->dates = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +104,48 @@ class Lieu
     public function setLongitude(float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getLieuVille(): ?Ville
+    {
+        return $this->LieuVille;
+    }
+
+    public function setLieuVille(?Ville $LieuVille): self
+    {
+        $this->LieuVille = $LieuVille;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Date>
+     */
+    public function getDates(): Collection
+    {
+        return $this->dates;
+    }
+
+    public function addDate(Date $date): self
+    {
+        if (!$this->dates->contains($date)) {
+            $this->dates[] = $date;
+            $date->setDateLieux($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDate(Date $date): self
+    {
+        if ($this->dates->removeElement($date)) {
+            // set the owning side to null (unless already changed)
+            if ($date->getDateLieux() === $this) {
+                $date->setDateLieux(null);
+            }
+        }
 
         return $this;
     }

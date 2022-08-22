@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UtilisateurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -58,6 +60,34 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $actif;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=campus::class, inversedBy="utilisateurs")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $utilisateurcampus;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Date::class)
+     */
+    private $participantdate;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="utilisateur", orphanRemoval=true)
+     */
+    private $participantdateorga;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="utilisateurs")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $relation;
+
+    public function __construct()
+    {
+        $this->participantdate = new ArrayCollection();
+        $this->participantdateorga = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -191,6 +221,72 @@ class Utilisateur implements UserInterface
     public function setActif(bool $actif): self
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Date>
+     */
+    public function getParticipantdate(): Collection
+    {
+        return $this->participantdate;
+    }
+
+    public function addParticipantdate(Date $participantdate): self
+    {
+        if (!$this->participantdate->contains($participantdate)) {
+            $this->participantdate[] = $participantdate;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipantdate(Date $participantdate): self
+    {
+        $this->participantdate->removeElement($participantdate);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Date>
+     */
+    public function getParticipantdateorga(): Collection
+    {
+        return $this->participantdateorga;
+    }
+
+    public function addParticipantdateorga(Date $participantdateorga): self
+    {
+        if (!$this->participantdateorga->contains($participantdateorga)) {
+            $this->participantdateorga[] = $participantdateorga;
+            $participantdateorga->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipantdateorga(Date $Participantdateorga): self
+    {
+        if ($this->Participantdateorga->removeElement($Participantdateorga)) {
+            // set the owning side to null (unless already changed)
+            if ($Participantdateorga->getUtilisateur() === $this) {
+                $Participantdateorga->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRelation(): ?Campus
+    {
+        return $this->relation;
+    }
+
+    public function setRelation(?Campus $relation): self
+    {
+        $this->relation = $relation;
 
         return $this;
     }

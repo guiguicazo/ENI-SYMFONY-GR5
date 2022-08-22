@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CampusRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,6 +24,22 @@ class Campus
      */
     private $nom;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Utilisateur::class, mappedBy="relation", orphanRemoval=true)
+     */
+    private $utilisateurs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Date::class, mappedBy="campus", orphanRemoval=true)
+     */
+    private $campusdate;
+
+    public function __construct()
+    {
+        $this->utilisateurs = new ArrayCollection();
+        $this->campusdate = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +53,66 @@ class Campus
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Utilisateur>
+     */
+    public function getUtilisateurs(): Collection
+    {
+        return $this->utilisateurs;
+    }
+
+    public function addUtilisateur(Utilisateur $utilisateur): self
+    {
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs[] = $utilisateur;
+            $utilisateur->setRelation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Utilisateur $utilisateur): self
+    {
+        if ($this->utilisateurs->removeElement($utilisateur)) {
+            // set the owning side to null (unless already changed)
+            if ($utilisateur->getRelation() === $this) {
+                $utilisateur->setRelation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Date>
+     */
+    public function getCampusdate(): Collection
+    {
+        return $this->campusdate;
+    }
+
+    public function addCampusdate(Date $campusdate): self
+    {
+        if (!$this->campusdate->contains($campusdate)) {
+            $this->campusdate[] = $campusdate;
+            $campusdate->setCampus($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCampusdate(Date $campusdate): self
+    {
+        if ($this->campusdate->removeElement($campusdate)) {
+            // set the owning side to null (unless already changed)
+            if ($campusdate->getCampus() === $this) {
+                $campusdate->setCampus(null);
+            }
+        }
 
         return $this;
     }
