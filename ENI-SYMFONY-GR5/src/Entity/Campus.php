@@ -24,10 +24,6 @@ class Campus
      */
     private $nom;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Utilisateur::class, mappedBy="relation")
-     */
-    private $utilisateurs;
 
     /**
      * @ORM\OneToMany(targetEntity=Date::class, mappedBy="campus")
@@ -36,7 +32,6 @@ class Campus
 
     public function __construct()
     {
-        $this->utilisateurs = new ArrayCollection();
         $this->campusdate = new ArrayCollection();
     }
 
@@ -57,35 +52,7 @@ class Campus
         return $this;
     }
 
-    /**
-     * @return Collection<int, Utilisateur>
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
 
-    public function addUtilisateur(Utilisateur $utilisateur): self
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->setRelation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateur $utilisateur): self
-    {
-        if ($this->utilisateurs->removeElement($utilisateur)) {
-            // set the owning side to null (unless already changed)
-            if ($utilisateur->getRelation() === $this) {
-                $utilisateur->setRelation(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Date>

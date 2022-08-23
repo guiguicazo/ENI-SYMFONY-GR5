@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -52,11 +54,7 @@ class Date
      */
     private $etat;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="utilisateurdateorga")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $utilisateur;
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="campusdate")
@@ -75,6 +73,21 @@ class Date
      * @ORM\JoinColumn(nullable=false)
      */
     private $DateLieux;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $organisateur;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="dates")
+     */
+    private $participants;
+
+    public function __construct()
+    {
+        $this->participants = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -189,17 +202,6 @@ class Date
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
-    {
-        return $this->utilisateur;
-    }
-
-    public function setUtilisateur(?Utilisateur $utilisateur): self
-    {
-        $this->utilisateur = $utilisateur;
-
-        return $this;
-    }
 
     public function getCampus(): ?Campus
     {
@@ -209,6 +211,42 @@ class Date
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function getOrganisateur(): ?User
+    {
+        return $this->organisateur;
+    }
+
+    public function setOrganisateur(?User $organisateur): self
+    {
+        $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(User $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(User $participant): self
+    {
+        $this->participants->removeElement($participant);
 
         return $this;
     }
